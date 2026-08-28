@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars for LOCAL runs only, if you want to override
+# any default. terraform.tfvars is git-ignored — nothing sensitive needs
+# to go here anyway, since the DB password is generated automatically and
+# there's no SSH key to configure.
+
+aws_region   = "us-east-1"
+project_name = "skillexchange"
+# db_username = "admin"   # already the default, override only if you want something else
