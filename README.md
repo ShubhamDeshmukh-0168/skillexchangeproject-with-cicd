@@ -1,4 +1,4 @@
-# SkillExchangeProject — Deploy on a New Server (Root URL Only)
+# SkillExchangeProject — Deploy on a New Server (Root URL Only)  
 
 This deploys the app on a **fresh** EC2 instance so it's reachable at just
 `http://<ip-or-load-balancer-dns>/` — no `:8080`, no `/SkillExchangeProject/`,
