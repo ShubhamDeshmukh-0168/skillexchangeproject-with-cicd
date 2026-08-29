@@ -171,12 +171,13 @@ jobs:
             ghcr.io/${{ steps.image.outputs.name }}:latest
             ghcr.io/${{ steps.image.outputs.name }}:${{ github.sha }}
 
-  # ------------------------------------------------------------------
+ 
+ # ------------------------------------------------------------------
   # 4. DEPLOY — ships the WAR to whatever IP the infra job just
   #    created/confirmed, restarts Tomcat, health-checks it, and rolls
   #    back automatically on failure.
   # ------------------------------------------------------------------
-    deploy:
+     deploy:
     name: Deploy via AWS SSM
     needs: [infra, build]
     runs-on: ubuntu-latest
