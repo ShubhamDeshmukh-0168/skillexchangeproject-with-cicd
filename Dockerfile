@@ -13,11 +13,13 @@ FROM tomcat:10.1-jdk17-temurin
 RUN rm -rf /usr/local/tomcat/webapps/*
 COPY --from=build /build/target/SkillExchangeProject.war /usr/local/tomcat/webapps/ROOT.war
 
-# DB connection is read from environment variables by the app/JDBC config.
-# Override these at "docker run" or in docker-compose.yml / your orchestrator.
-ENV DB_URL="jdbc:mysql://REPLACE_ME_ENDPOINT:3306/skillexchange?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
-ENV DB_USER="REPLACE_ME_USERNAME"
-ENV DB_PASSWORD="REPLACE_ME_PASSWORD"
+# DB connection is read from environment variables at runtime by the app
+# (DatabaseInfo.java) - DB_URL, DB_USER, DB_PASSWORD. Intentionally NOT
+# set here with ENV: baking even placeholder credentials into an image
+# layer is bad practice (they'd sit in the image history forever, and
+# scanners flag it). Pass real values at "docker run -e ..." time or via
+# docker-compose.yml / your orchestrator's secret injection. If unset,
+# the app falls back to a local dev default (localhost/root/password).
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
