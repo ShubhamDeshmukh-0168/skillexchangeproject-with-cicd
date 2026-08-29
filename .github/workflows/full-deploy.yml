@@ -2,7 +2,7 @@ name: Full Deploy - Infra + Build + Deploy
 
 # One trigger does everything: create/update AWS infra with Terraform,
 # build the WAR, build+push a Docker image, then deploy the WAR onto
-# whatever server Terraform just reported — no manual steps, no
+# whatever server Terraform just reported - no manual steps, no
 # copy/pasting IPs between jobs or secrets.
 on:
   push:
@@ -19,7 +19,7 @@ env:
 
 jobs:
   # ------------------------------------------------------------------
-  # 1. INFRA — creates/updates the VPC, EC2 app server, and RDS via
+  # 1. INFRA - creates/updates the VPC, EC2 app server, and RDS via
   #    Terraform. Its output (the server's IP) feeds directly into the
   #    deploy job below as a job output, nothing goes through secrets.
   # ------------------------------------------------------------------
@@ -106,7 +106,7 @@ jobs:
           echo "instance_id=$(terraform output -raw app_instance_id)" >> "$GITHUB_OUTPUT"
 
   # ------------------------------------------------------------------
-  # 2. BUILD — compiles the WAR. Independent of infra, so it runs in
+  # 2. BUILD - compiles the WAR. Independent of infra, so it runs in
   #    parallel with the Terraform job above to save time.
   # ------------------------------------------------------------------
   build:
@@ -134,7 +134,7 @@ jobs:
           retention-days: 14
 
   # ------------------------------------------------------------------
-  # 3. DOCKER — versioned image pushed to GHCR (backup / portable copy,
+  # 3. DOCKER - versioned image pushed to GHCR (backup / portable copy,
   #    not required for the EC2 deploy path below).
   # ------------------------------------------------------------------
   docker:
@@ -171,13 +171,12 @@ jobs:
             ghcr.io/${{ steps.image.outputs.name }}:latest
             ghcr.io/${{ steps.image.outputs.name }}:${{ github.sha }}
 
- 
- # ------------------------------------------------------------------
-  # 4. DEPLOY — ships the WAR to whatever IP the infra job just
+  # ------------------------------------------------------------------
+  # 4. DEPLOY - ships the WAR to whatever IP the infra job just
   #    created/confirmed, restarts Tomcat, health-checks it, and rolls
   #    back automatically on failure.
   # ------------------------------------------------------------------
-     deploy:
+  deploy:
     name: Deploy via AWS SSM
     needs: [infra, build]
     runs-on: ubuntu-latest
